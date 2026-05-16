@@ -38,6 +38,38 @@ if (navContainer && navToggle && navLinks) {
   });
 }
 
+const footerAccordionBtns = document.querySelectorAll(".footer-accordion-btn");
+
+footerAccordionBtns.forEach((btn) => {
+  btn.addEventListener("click", function () {
+    const section = this.getAttribute("data-section");
+    const content = document.getElementById(section);
+    const isOpen = content.style.display !== "none";
+
+    footerAccordionBtns.forEach((otherBtn) => {
+      const otherSection = otherBtn.getAttribute("data-section");
+      const otherContent = document.getElementById(otherSection);
+      otherContent.style.display = "none";
+      otherBtn.setAttribute("aria-expanded", "false");
+      const icon = otherBtn.querySelector("i");
+      if (icon) {
+        icon.classList.remove("fa-chevron-up");
+        icon.classList.add("fa-chevron-down");
+      }
+    });
+
+    if (!isOpen) {
+      content.style.display = "block";
+      this.setAttribute("aria-expanded", "true");
+      const icon = this.querySelector("i");
+      if (icon) {
+        icon.classList.remove("fa-chevron-down");
+        icon.classList.add("fa-chevron-up");
+      }
+    }
+  });
+});
+
 const heroVideo = document.getElementById("heroVideo");
 const soundToggle = document.getElementById("soundToggle");
 const soundIcon = document.getElementById("soundIcon");
