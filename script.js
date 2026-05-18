@@ -9,8 +9,11 @@ const navLinks = document.querySelector(".nav-links");
 
 if (navContainer && navToggle && navLinks) {
   const navToggleIcon = navToggle.querySelector("i");
+  const firstNavLink = navLinks.querySelector("a");
 
-  const setMenuState = function (isOpen) {
+  const setMenuState = function (isOpen, options = {}) {
+    const { moveFocus = false } = options;
+
     navContainer.classList.toggle("nav-open", isOpen);
     navToggle.setAttribute("aria-expanded", String(isOpen));
 
@@ -18,11 +21,21 @@ if (navContainer && navToggle && navLinks) {
       navToggleIcon.classList.toggle("fa-bars", !isOpen);
       navToggleIcon.classList.toggle("fa-xmark", isOpen);
     }
+
+    if (moveFocus) {
+      if (isOpen && firstNavLink) {
+        firstNavLink.focus();
+      }
+
+      if (!isOpen) {
+        navToggle.focus();
+      }
+    }
   };
 
   navToggle.addEventListener("click", function () {
     const isOpen = navContainer.classList.contains("nav-open");
-    setMenuState(!isOpen);
+    setMenuState(!isOpen, { moveFocus: true });
   });
 
   navLinks.addEventListener("click", function (event) {
@@ -34,6 +47,14 @@ if (navContainer && navToggle && navLinks) {
   window.addEventListener("resize", function () {
     if (window.innerWidth > 1200) {
       setMenuState(false);
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    const isOpen = navContainer.classList.contains("nav-open");
+
+    if (event.key === "Escape" && isOpen) {
+      setMenuState(false, { moveFocus: true });
     }
   });
 }
